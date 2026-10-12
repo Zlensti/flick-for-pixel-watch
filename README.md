@@ -1,2 +1,76 @@
-# flick-for-pixel-watch
+# Flick for Pixel Watch
+
 A free, experimental Pixel Watch app that dismisses one notification at a time with a middle-finger/thumb flick.
+
+Wake and unlock your watch, open the notification list, and flick when the card you want to dismiss is centered. One recognized flick requests one dismissal. No snapping sound is needed.
+
+## Early beta
+
+The earlier 0.16 prototype was tested on one Pixel Watch 3 in English. The 0.17 guided setup and release installation have passed software checks but have not yet been tested on a physical watch. Other models, languages and software versions need testing. Recognition varies by wearer, and battery impact has not been measured.
+
+## Download
+
+Visit [Releases](https://github.com/Zlensti/flick-for-pixel-watch/releases) for published builds. If none are listed, a public download is not available yet.
+
+Choose the APK for the app, or the share ZIP for the APK, installation guide, privacy information and checksum. Install the APK directly on your watch using a computer and Wi-Fi.
+
+## Install on the watch
+
+1. Download and extract [Google Android Platform Tools](https://developer.android.com/tools/releases/platform-tools). Put the Flick APK in the extracted platform-tools folder. Connect the computer and watch to the same Wi-Fi network.
+2. On the watch, open **Settings > System > About > Versions**. Tap **Build number** seven times. Menu wording can vary.
+3. Open **Developer options**. Enable **ADB debugging** and **Wireless debugging**, then choose **Pair new device**.
+4. Open a terminal in the platform-tools folder. Run the pairing command below using the address shown under Pair new device, and enter the six-digit code when asked.
+
+```text
+adb pair WATCH_IP:PAIRING_PORT
+```
+
+Return to the main Wireless debugging screen. Its connection port is usually different from the pairing port. Use that address for these commands:
+
+```text
+adb connect WATCH_IP:CONNECTION_PORT
+adb devices
+adb -s WATCH_IP:CONNECTION_PORT install -r Flick-0.17.0-beta.1.apk
+```
+
+Replace the address placeholders with your watch values. On macOS/Linux use `./adb`; in Windows PowerShell use `.\adb.exe`. Wait for **Success**, then open **Flick** from the watch app list. [Official Google connection instructions](https://developer.android.com/training/wearables/get-started/debug-wifi).
+
+## Teach your gesture
+
+1. Tap **Set up**, then **Start recording**. Wear the watch on your flicking hand.
+2. Make one comfortable middle-finger/thumb flick each time **Flick now** appears. Record all eight examples.
+3. Record the six ordinary movements shown, without making the flick. These help the app ignore normal hand movements.
+4. Use **Practice**. Try five flicks, then ordinary movements. Each flick should add one; ordinary movements should not. Practice only counts and never clears notifications.
+5. Open **Access & privacy**, read the explanations, and enable **Flick notification gestures** in Accessibility and **Flick notification access** where available.
+6. Return to Flick, tap **Turn on**, and wait for **Gestures on**.
+
+If your watch has no notification-access settings screen, use this computer command:
+
+```text
+adb -s WATCH_IP:CONNECTION_PORT shell cmd notification allow_listener com.kevinruby.flicklab/com.kevinruby.flicklab.notifications.FlickNotificationListener
+```
+
+This grants notification access only. Accessibility and turning gestures on are separate steps. If Android shows a restricted-settings warning, see the included INSTALL.txt and [Google help](https://support.google.com/android/answer/12623953); watch menus vary.
+
+Once setup works, turn ADB debugging and Wireless debugging off. Flick does not need your computer or a network connection for daily use.
+
+## Everyday use
+
+Open notifications with a swipe up or your watch's supported system pinch gesture. Flick once when the desired card is centered. Flick does not add Google's pinch feature to watches that lack it.
+
+The on/off choice is saved. Gestures pause while the screen is off, the watch is locked, or you record or practice. Incoming alerts briefly pause recognition to avoid mistaking their vibration for a flick. **Turn off** keeps gestures off. A system force-stop requires opening the app again.
+
+Use **Practice & setup > Teach gesture** to improve recognition or start over. Start over turns gestures off and keeps old examples privately without using them.
+
+## Permissions and privacy
+
+- **Accessibility:** reads the visible notification list, including card text and app names, to identify the centered card and perform its dismissal or a rightward swipe.
+- **Notification access:** Android grants broad access; Flick uses alert arrivals to avoid recognizing notification vibrations as flicks.
+- Processing and gesture examples stay on your watch. Notification content is not saved or uploaded.
+- No account, ads, analytics service, Internet permission, camera, or microphone. The shared APK contains no other wearer's recordings.
+
+The share ZIP includes PRIVACY.txt with details. Uninstalling removes local training data. A public release APK cannot update an earlier debug-signed development build directly, so do not uninstall a trained development build just to switch versions.
+
+## Feedback
+
+Report your watch model, Wear OS version, watch language, and whether flicks are missed or normal movements trigger the app in [Issues](https://github.com/Zlensti/flick-for-pixel-watch/issues). Avoid including personal notification content.
